@@ -10,10 +10,11 @@ namespace KF2_Workshop_URL_Converter
     class Program
     {
         private static string appVersion = "1.0";
+        private static string dllFileName = "kf2workshopurlconverter";
 
         static void Main(string[] args)
         {
-            //List and catch arguments
+            #region List and catch arguments
             bool help = false;
             bool version = false;
             string url = null;
@@ -65,8 +66,9 @@ namespace KF2_Workshop_URL_Converter
                 ShowError("Invalid URL Format.");
                 return;
             }
-            
-            //Program
+            #endregion
+
+            #region Program
             HtmlWeb web = new HtmlWeb();
             HtmlDocument doc;
             
@@ -81,6 +83,7 @@ namespace KF2_Workshop_URL_Converter
                 return;
             }
 
+            //Get Items Nodes
             HtmlNodeCollection nodes = doc.DocumentNode.SelectNodes("//div[@class='collectionItemDetails']");
 
             if (nodes == null)
@@ -91,11 +94,11 @@ namespace KF2_Workshop_URL_Converter
 
             //List Format
             string title = doc.DocumentNode.SelectNodes("//div[@class='workshopItemTitle']")[0].InnerText;
-            string header = "### " + title + " ###" + Environment.NewLine + 
-                            "### Coll URL: " + url + " ###" + Environment.NewLine + 
-                            "### " + nodes.Count + " Items | Last Query: " + DateTime.Now + " ###";
+            string header = $"### {title} ###" + Environment.NewLine + 
+                            $"### Coll URL: {url} ###" + Environment.NewLine + 
+                            $"### {nodes.Count} Items | Last Query: {DateTime.Now} ###";
             string dotIniUrlFormat = "ServerSubscribedWorkshopItems=";
-            string footer = "## END of " + title + " ##" + Environment.NewLine;
+            string footer = $"## END of {title} ##" + Environment.NewLine;
 
             if (path == null)
             {
@@ -156,20 +159,21 @@ namespace KF2_Workshop_URL_Converter
             }
             if(path != null)
             {
-                Console.WriteLine("Success! File Saved to \"" + path + "\"" + Environment.NewLine);
+                Console.WriteLine($"Success! File Saved to \"{path}\"" + Environment.NewLine);
             }
+            #endregion
         }
 
         private static void ShowVersion()
         {
-            Console.WriteLine("KF2 Workshop Collection URL Converter v" + appVersion);
+            Console.WriteLine($"KF2 Workshop Collection URL Converter v{appVersion}");
             Console.WriteLine("Project Page: https://github.com/DouglasAntunes/KF2-Workshop-Collection-URL-Converter");
             Console.WriteLine("Try `dotnet kf2workshopurlconverter.dll --help' for more information.");
         }
 
         private static void ShowHelp(OptionSet p)
         {
-            Console.WriteLine("Usage: dotnet kf2workshopurlconverter.dll [OPTIONS]");
+            Console.WriteLine($"Usage: dotnet {dllFileName}.dll [OPTIONS]");
             Console.WriteLine("Converts the URL of a Steam Workshop Collection to the format that the file \"PCServer-KFEngine.ini\" accepts.");
             Console.WriteLine("Requires URL on format like https://steamcommunity.com/sharedfiles/filedetails/?id=XXXXXXXXX... (http:// is accepted as well).");
             Console.WriteLine("## For more info or updates, go to https://github.com/DouglasAntunes/KF2-Workshop-Collection-URL-Converter");
@@ -182,14 +186,14 @@ namespace KF2_Workshop_URL_Converter
         {
             Console.Write("kf2workshopurlconverter: ");
             Console.WriteLine(e.Message);
-            Console.WriteLine("Try `dotnet kf2workshopurlconverter.dll --help' for more information.");
+            Console.WriteLine($"Try `dotnet {dllFileName}.dll --help' for more information.");
         }
 
         private static void ShowError(string error)
         {
             Console.Write("kf2workshopurlconverter: ");
             Console.WriteLine(error);
-            Console.WriteLine("Try `dotnet kf2workshopurlconverter.dll --help' for more information.");
+            Console.WriteLine($"Try `dotnet {dllFileName}.dll --help' for more information.");
         }
     }
 }
