@@ -1,5 +1,4 @@
 ## How to Create a Killing Floor 2 Collection on Steam Workshop
-----
 
 1. On your Steam, select the game Killing Floor 2 and Click "Browse the Workshop" ![image01](http://i.imgur.com/luQZMus.jpg)
 
