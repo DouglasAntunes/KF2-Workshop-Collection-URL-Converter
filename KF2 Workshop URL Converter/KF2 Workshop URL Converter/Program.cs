@@ -4,13 +4,14 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
+using System.Reflection;
 
 namespace KF2_Workshop_URL_Converter
 {
     class Program
     {
         private static string appVersion = "1.0";
-        private static string dllFileName = "kf2workshopurlconverter";
+        private static string dllFileName;
 
         static void Main(string[] args)
         {
@@ -20,6 +21,7 @@ namespace KF2_Workshop_URL_Converter
             string url = null;
             string path = null;
             string defaultWorkshopUrl = "steamcommunity.com/sharedfiles/filedetails/?id=";
+            dllFileName = Path.GetFileName(Assembly.GetEntryAssembly().Location);
             List<string> extra;
 
             OptionSet options = new OptionSet() {
@@ -168,12 +170,12 @@ namespace KF2_Workshop_URL_Converter
         {
             Console.WriteLine($"KF2 Workshop Collection URL Converter v{appVersion}");
             Console.WriteLine("Project Page: https://github.com/DouglasAntunes/KF2-Workshop-Collection-URL-Converter");
-            Console.WriteLine("Try `dotnet kf2workshopurlconverter.dll --help' for more information.");
+            Console.WriteLine($"Try `dotnet {dllFileName} --help' for more information.");
         }
 
         private static void ShowHelp(OptionSet p)
         {
-            Console.WriteLine($"Usage: dotnet {dllFileName}.dll [OPTIONS]");
+            Console.WriteLine($"Usage: dotnet {dllFileName} [OPTIONS]");
             Console.WriteLine("Converts the URL of a Steam Workshop Collection to the format that the file \"PCServer-KFEngine.ini\" accepts.");
             Console.WriteLine("Requires URL on format like https://steamcommunity.com/sharedfiles/filedetails/?id=XXXXXXXXX... (http:// is accepted as well).");
             Console.WriteLine("## For more info or updates, go to https://github.com/DouglasAntunes/KF2-Workshop-Collection-URL-Converter");
@@ -186,14 +188,14 @@ namespace KF2_Workshop_URL_Converter
         {
             Console.Write("kf2workshopurlconverter: ");
             Console.WriteLine(e.Message);
-            Console.WriteLine($"Try `dotnet {dllFileName}.dll --help' for more information.");
+            Console.WriteLine($"Try `dotnet {dllFileName} --help' for more information.");
         }
 
         private static void ShowError(string error)
         {
             Console.Write("kf2workshopurlconverter: ");
             Console.WriteLine(error);
-            Console.WriteLine($"Try `dotnet {dllFileName}.dll --help' for more information.");
+            Console.WriteLine($"Try `dotnet {dllFileName} --help' for more information.");
         }
     }
 }
