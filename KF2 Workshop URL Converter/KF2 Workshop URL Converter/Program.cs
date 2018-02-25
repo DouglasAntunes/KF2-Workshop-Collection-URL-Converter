@@ -186,14 +186,14 @@ namespace KF2_Workshop_URL_Converter
 
         private static void ShowError(Exception e)
         {
-            Console.Write("kf2workshopurlconverter: ");
+            Console.Write($"KF2 Workshop Collection URL Converter v{appVersion}: ");
             Console.WriteLine(e.Message);
             Console.WriteLine($"Try `dotnet {dllFileName} --help' for more information.");
         }
 
         private static void ShowError(string error)
         {
-            Console.Write("kf2workshopurlconverter: ");
+            Console.Write($"KF2 Workshop Collection URL Converter v{appVersion}: ");
             Console.WriteLine(error);
             Console.WriteLine($"Try `dotnet {dllFileName} --help' for more information.");
         }
