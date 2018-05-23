@@ -6,11 +6,11 @@ using System.IO;
 using System.Text.RegularExpressions;
 using System.Reflection;
 
-namespace KF2_Workshop_URL_Converter
+namespace KF2WorkshopUrlConverter.Core
 {
     class Program
     {
-        private static string appVersion = "1.0";
+        private static readonly string appVersion = "1.0";
         private static string dllFileName;
 
         static void Main(string[] args)
