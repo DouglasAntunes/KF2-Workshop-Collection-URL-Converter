@@ -1,6 +1,6 @@
 # KF2 Workshop Collection URL Converter
 
-KF2 Workshop Collection URL Converter is a program to help server owners to keep updated custom content(maps, items) on a server using Steam Workshop Collections. 
+KF2 Workshop Collection URL Converter is a tool to help server owners to keep updated custom content(maps, items) on a server using Steam Workshop Collections. (Like [this](https://steamcommunity.com/sharedfiles/filedetails/?id=882417829 "Example Collection") Example Collection)
 
 The use of Steam Workshop Collection facilitate users to download all content before joining the server.
 
@@ -22,9 +22,12 @@ If you don't have the .NET Core Runtime, Download [Here](https://www.microsoft.c
 
 3. Open Terminal, PowerShell or Command Prompt on the folder.
 
-4. Type ```dotnet kf2workshopurlconverter.dll -url=http://steamcommunity.com/sharedfiles/filedetails/?id=882417829``` changing the url link with the desired collection (http or https).
+4. Type ```dotnet kf2workshopurlconverter.dll -u http://steamcommunity.com/sharedfiles/filedetails/?id=882417829``` changing the url link with the desired collection (http or https).
 
 5. See the results.
+
+- You can export this list do a file using the ```-o path\to\file``` parameter.
+Example: ```dotnet kf2workshopurlconverter.dll -u http://steamcommunity.com/sharedfiles/filedetails/?id=882417829 -o maps.txt```
 
 For more help, type ```dotnet kf2workshopurlconverter.dll -help```
 
