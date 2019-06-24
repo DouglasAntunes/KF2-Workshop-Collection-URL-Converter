@@ -39,7 +39,7 @@ namespace KF2WorkshopUrlConverter.Test.Services
         }
 
         [Test]
-        public void SuccededToFetchTheProjectExampleCollection()
+        public void SucceedToFetchTheProjectExampleCollection()
         {
             var testUrl = "https://steamcommunity.com/sharedfiles/filedetails/?id=882417829";
             var collection = workshopService.FetchCollectionFromURL(testUrl);
