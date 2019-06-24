@@ -1,16 +1,20 @@
-﻿using HtmlAgilityPack;
+﻿using KF2WorkshopUrlConverter.Core.KF2ServerUtils;
+using KF2WorkshopUrlConverter.Core.SteamWorkshop.Entities;
+using KF2WorkshopUrlConverter.Core.SteamWorkshop.Services;
 using Mono.Options;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text.RegularExpressions;
 using System.Reflection;
+using System.Runtime.CompilerServices;
+using System.Text;
 
+[assembly: InternalsVisibleTo("KF2WorkshopUrlConverter.Test")]
 namespace KF2WorkshopUrlConverter.Core
 {
     class Program
     {
-        private static readonly string appVersion = "1.0";
+        private const string appVersion = "1.1";
         private static string dllFileName;
 
         static void Main(string[] args)
@@ -20,7 +24,6 @@ namespace KF2WorkshopUrlConverter.Core
             bool version = false;
             string url = null;
             string path = null;
-            string defaultWorkshopUrl = "steamcommunity.com/sharedfiles/filedetails/?id=";
             dllFileName = Path.GetFileName(Assembly.GetEntryAssembly().Location);
             List<string> extra;
 
@@ -34,7 +37,7 @@ namespace KF2WorkshopUrlConverter.Core
                 { "h|help",  "Show this message and exit.",
                     v => help = v != null }
             };
-            
+
             try
             {
                 extra = options.Parse(args);
@@ -44,14 +47,14 @@ namespace KF2WorkshopUrlConverter.Core
                 ShowError(e);
                 return;
             }
-            
+
             if (help)
             {
                 ShowHelp(options);
                 return;
             }
 
-            if(version)
+            if (version)
             {
                 ShowVersion();
                 return;
@@ -62,106 +65,48 @@ namespace KF2WorkshopUrlConverter.Core
                 ShowError("Missing required option u|url=");
                 return;
             }
-            
-            if (!url.Contains(defaultWorkshopUrl))
-            {
-                ShowError("Invalid URL Format.");
-                return;
-            }
             #endregion
 
             #region Program
-            HtmlWeb web = new HtmlWeb();
-            HtmlDocument doc;
-            
-            //Check if the url has a protocol
             try
             {
-                doc = web.Load(url);
-            }
-            catch(UriFormatException)
-            {
-                ShowError("Must contain http:// or https:// on the URL.");
-                return;
-            }
+                SteamWorkshopService workshopService = new SteamWorkshopService();
+                Collection collection = workshopService.FetchCollectionFromURL(url);
 
-            //Get Items Nodes
-            HtmlNodeCollection nodes = doc.DocumentNode.SelectNodes("//div[@class='collectionItemDetails']");
+                //List Format
+                StringBuilder header = new StringBuilder()
+                    .AppendLine($"### {collection.Name} ###")
+                    .AppendLine($"### Coll URL: {url} ###")
+                    .AppendLine($"### {collection.ItemCount} Items | Last Query: {DateTime.Now} ###");
+                string footer = $"## END of {collection.Name} ##";
 
-            if (nodes == null)
-            {
-                ShowError("Not a Collection.");
-                return;
-            }
+                string collectionList = new WorkshopSectionCollectionListBuilder()
+                    .WithHeader(header.ToString())
+                    .WithCollection(collection)
+                    .WithFooter(footer)
+                    .WithFormat("ServerSubscribedWorkshopItems={0} # {1}")
+                .Build();
 
-            //List Format
-            string title = doc.DocumentNode.SelectNodes("//div[@class='workshopItemTitle']")[0].InnerText;
-            string header = $"### {title} ###" + Environment.NewLine + 
-                            $"### Coll URL: {url} ###" + Environment.NewLine + 
-                            $"### {nodes.Count} Items | Last Query: {DateTime.Now} ###";
-            string dotIniUrlFormat = "ServerSubscribedWorkshopItems=";
-            string footer = $"## END of {title} ##" + Environment.NewLine;
-
-            if (path == null)
-            {
-                Console.WriteLine(header);
-            }
-            else
-            {
-                //File Exists?
-                if (new FileInfo(path).Exists)
+                if (path == null)
                 {
-                    using (FileStream fs = new FileStream(path, FileMode.Append))
-                    {
-                        using (StreamWriter file = new StreamWriter(fs))
-                        {
-                            file.WriteLine(header);
-                        }
-                    }
+                    Console.WriteLine(collectionList);
                 }
                 else
                 {
-                    using (FileStream fs = new FileStream(path, FileMode.OpenOrCreate))
+                    using (FileStream fs = new FileStream(path, new FileInfo(path).Exists ? FileMode.Append : FileMode.OpenOrCreate))
                     {
                         using (StreamWriter file = new StreamWriter(fs))
                         {
-                            file.WriteLine(header);
+                            file.WriteLine(collectionList);
                         }
                     }
+                    Console.WriteLine($"Success! File Saved to \"{path}\"\n");
                 }
             }
-
-            foreach (HtmlNode n in nodes)
+            catch (Exception e)
             {
-                string itemurl = n.SelectSingleNode(".//a").Attributes["href"].Value;
-                string output = dotIniUrlFormat + Regex.Replace(itemurl, @"[^0-9]", "") + " # " + n.SelectSingleNode(".//div[@class='workshopItemTitle']").InnerText;
-
-                if(path == null)
-                {
-                    Console.WriteLine(output);
-                    if(nodes.IndexOf(n) == nodes.Count-1)
-                    {
-                        Console.WriteLine(footer);
-                    }
-                }
-                else
-                {
-                    using (FileStream fs = new FileStream(path, FileMode.Append))
-                    {
-                        using (StreamWriter file = new StreamWriter(fs))
-                        {
-                            file.WriteLine(output);
-                            if(nodes.IndexOf(n) == nodes.Count-1)
-                            {
-                                file.WriteLine(footer);
-                            }
-                        }
-                    }
-                }
-            }
-            if(path != null)
-            {
-                Console.WriteLine($"Success! File Saved to \"{path}\"" + Environment.NewLine);
+                ShowError(e.Message);
+                return;
             }
             #endregion
         }
