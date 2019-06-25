@@ -32,11 +32,24 @@ namespace KF2WorkshopUrlConverter.Test
                 new Item("AnId", "RandomName")
             });
             var result = collectionListBuilder.WithCollection(collection).Build();
-            var resultExpected = $"RandomName {collection.Items[0].Url}" + Environment.NewLine;
+            var resultExpected = $"RandomName https://steamcommunity.com/sharedfiles/filedetails/?id=AnId" + Environment.NewLine;
 
             Assert.IsNotEmpty(result);
             Assert.IsTrue(result.Equals(resultExpected));
         }
 
+        [Test]
+        public void GenerateListWithoutHeaderOrFooter()
+        {
+            var collection = new Collection("a", "b", new List<Item>()
+            {
+                new Item("AnId", "RandomName")
+            });
+            var result = collectionListBuilder.WithCollection(collection).WithFormat("{2} {1} {0}").Build();
+            var resultExpected = "https://steamcommunity.com/sharedfiles/filedetails/?id=AnId RandomName AnId" + Environment.NewLine;
+
+            Assert.IsNotEmpty(result);
+            Assert.IsTrue(result.Equals(resultExpected));
+        }
     }
 }
