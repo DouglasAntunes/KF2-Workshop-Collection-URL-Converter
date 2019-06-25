@@ -47,7 +47,5 @@ namespace KF2WorkshopUrlConverter.Test.Services
             Assert.IsTrue(collection.Name.Equals("Map Collection Example"));
             Assert.IsTrue(collection.Items[0].Url.Equals("https://steamcommunity.com/sharedfiles/filedetails/?id=650252240"));
         }
-
-
     }
 }
