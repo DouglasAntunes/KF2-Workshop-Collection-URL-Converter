@@ -1,10 +1,8 @@
 ﻿using KF2WorkshopUrlConverter.Core.KF2ServerUtils;
 using KF2WorkshopUrlConverter.Core.SteamWorkshop.Entities;
-using KF2WorkshopUrlConverter.Core.SteamWorkshop.Services;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace KF2WorkshopUrlConverter.Test
 {
