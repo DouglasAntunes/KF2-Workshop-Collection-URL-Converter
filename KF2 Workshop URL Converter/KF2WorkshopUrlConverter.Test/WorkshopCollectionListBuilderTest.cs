@@ -19,7 +19,7 @@ namespace KF2WorkshopUrlConverter.Test
         }
 
         [Test]
-        [Description("Try to generate a list with default values, expecting a empty string as result.")]
+        [Description("Trys to generate a list with default values, expecting a empty string as result.")]
         public void GenerateEmptyListWithNoCollection()
         {
             var result = collectionListBuilder.Build();
@@ -27,7 +27,7 @@ namespace KF2WorkshopUrlConverter.Test
         }
 
         [Test]
-        [Description("Try to generate a list providing a collection of 1 item and not providing header, footer or an item format, expecting the default result.")]
+        [Description("Trys to generate a list providing a collection of 1 item and not providing header, footer or an item format, expecting the default result.")]
         public void GenerateListWithoutHeaderFooterOrFormat()
         {
             var collection = new Collection("a", "b", new List<Item>()
@@ -42,7 +42,7 @@ namespace KF2WorkshopUrlConverter.Test
         }
 
         [Test]
-        [Description("Try to generate a list providing a collection of 1 item, an item format and not providing header or footer, expecting a custom result.")]
+        [Description("Trys to generate a list providing a collection of 1 item, an item format and not providing header or footer, expecting a custom result.")]
         public void GenerateListWithoutHeaderOrFooter()
         {
             var collection = new Collection("a", "b", new List<Item>()
