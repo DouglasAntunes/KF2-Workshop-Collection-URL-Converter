@@ -6,11 +6,13 @@ using System;
 namespace KF2WorkshopUrlConverter.Test.Services
 {
     [TestFixture]
+    [Description("Tests related to KF2WorkshopUrlConverter.Core.SteamWorkshop.Services.SteamWorkshopService")]
     public class SteamWorkshopServiceTest
     {
         private readonly SteamWorkshopService workshopService = new SteamWorkshopService();
 
         [Test]
+        [Description("Trys to fetch a collection with an invalid url and throws a NotASteamWorkshopUrlException.")]
         public void FailsToFetchCollectionFromInvalidUrlAndThrowAnException()
         {
             var testUrl = "randomTextAndNotAUrl";
@@ -18,6 +20,7 @@ namespace KF2WorkshopUrlConverter.Test.Services
         }
 
         [Test]
+        [Description("Trys to fetch a collection with a valid url, but not a SteamWorkshop Url and throws a NotASteamWorkshopUrlException.")]
         public void FailsToFetchCollectionFromValidUrlButNotASteamWorkshopUrlAndThrowAnException()
         {
             var testUrl = "https://google.com.br";
@@ -25,6 +28,7 @@ namespace KF2WorkshopUrlConverter.Test.Services
         }
 
         [Test]
+        [Description("Trys to fetch a collection with a valid SteamWorkshop URL, but without protocol and throws an UriFormatException.")]
         public void FailsToFetchCollectionFromValidSteamWorkshopUrlWithoutProtocolAndThrowAnException()
         {
             var testUrl = "steamcommunity.com/sharedfiles/filedetails/?id=882417829";
@@ -32,6 +36,7 @@ namespace KF2WorkshopUrlConverter.Test.Services
         }
 
         [Test]
+        [Description("Trys to fetch a collection with a Item SteamWorkshop URL and throws a NotACollectionException.")]
         public void FailsToFetchCollectionFromASteamWorkshopItemUrlAndThrowAnException()
         {
             var testUrl = "https://steamcommunity.com/sharedfiles/filedetails/?id=650252240";
@@ -39,6 +44,7 @@ namespace KF2WorkshopUrlConverter.Test.Services
         }
 
         [Test]
+        [Description("Trys to fetch the Example Collection from SteamWorkshop and expects: 1 item, correct name & correct url from an item.")]
         public void SucceedToFetchTheProjectExampleCollection()
         {
             var testUrl = "https://steamcommunity.com/sharedfiles/filedetails/?id=882417829";
