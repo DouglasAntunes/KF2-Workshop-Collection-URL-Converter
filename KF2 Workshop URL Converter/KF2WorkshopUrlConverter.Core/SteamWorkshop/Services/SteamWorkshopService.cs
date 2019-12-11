@@ -16,25 +16,25 @@ namespace KF2WorkshopUrlConverter.Core.SteamWorkshop.Services
                 throw new NotASteamWorkshopUrlException("Not a Steam Workshop URL");
             }
             HtmlWeb web = new HtmlWeb();
-            HtmlDocument doc;
+            HtmlDocument pageDoc;
             try
             {
-                doc = web.Load(url);
+                pageDoc = web.Load(url);
             }
             catch (UriFormatException e)
             {
                 throw new UriFormatException("Must contain http:// or https:// on the URL.", e);
             }
-            if (!IsASteamWorkshopCollection(url))
+            if (!IsASteamWorkshopCollection(pageDoc))
             {
                 throw new NotACollectionException("This url is not a Steam Workshop collection");
             }
 
             string colId = Regex.Replace(url, @"[^0-9]", string.Empty);
-            string colName = doc.DocumentNode.SelectNodes("//div[@class='workshopItemTitle']")[0].InnerText;
+            string colName = pageDoc.DocumentNode.SelectNodes("//div[@class='workshopItemTitle']")[0].InnerText;
             List<Item> colItems = new List<Item>();
 
-            HtmlNodeCollection nodes = doc.DocumentNode.SelectNodes("//div[@class='collectionItemDetails']");
+            HtmlNodeCollection nodes = pageDoc.DocumentNode.SelectNodes("//div[@class='collectionItemDetails']");
             foreach (HtmlNode n in nodes)
             {
                 string ItemUrl = n.SelectSingleNode(".//a").Attributes["href"].Value;
@@ -49,17 +49,22 @@ namespace KF2WorkshopUrlConverter.Core.SteamWorkshop.Services
         public static bool IsASteamWorkshopCollection(string url)
         {
             HtmlWeb web = new HtmlWeb();
-            HtmlDocument doc;
+            HtmlDocument pageDoc;
             try
             {
-                doc = web.Load(url);
+                pageDoc = web.Load(url);
             }
             catch (UriFormatException e)
             {
                 throw new UriFormatException("Must contain http:// or https:// on the URL.", e);
             }
-            HtmlNodeCollection nodes = doc.DocumentNode.SelectNodes("//div[@class='collectionItemDetails']");
+            HtmlNodeCollection nodes = pageDoc.DocumentNode.SelectNodes("//div[@class='collectionItemDetails']");
             return nodes != null;
+        }
+
+        public static bool IsASteamWorkshopCollection(HtmlDocument document)
+        {
+            return document.DocumentNode.SelectNodes("//div[@class='collectionItemDetails']") != null;
         }
 
         public Item FetchItemFromUrl(string url)

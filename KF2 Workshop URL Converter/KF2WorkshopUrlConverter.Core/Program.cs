@@ -80,7 +80,7 @@ namespace KF2WorkshopUrlConverter.Core
                     .AppendLine($"### {collection.ItemCount} Items | Last Query: {DateTime.Now} ###");
                 string footer = $"## END of {collection.Name} ##";
 
-                string collectionList = new WorkshopSectionCollectionListBuilder()
+                string collectionList = new WorkshopCollectionListBuilder()
                     .WithHeader(header.ToString())
                     .WithCollection(collection)
                     .WithFooter(footer)
