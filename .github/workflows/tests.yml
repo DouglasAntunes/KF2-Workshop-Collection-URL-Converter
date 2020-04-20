@@ -1,0 +1,26 @@
+name: Tests
+
+env:
+  PROJECT_FOLDER: "./KF2 Workshop URL Converter/KF2 Workshop URL Converter.sln"
+
+on:
+  pull_request:
+    paths:
+      - "!**.*"
+      - "!Images/"
+      - "KF2 Workshop URL Converter/**"
+
+jobs:
+  test:
+    name: Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+            dotnet-version: 3.1
+      - name: Install Dependencies
+        run: dotnet restore $PROJECT_FOLDER
+      - name: Test
+        run: dotnet test $PROJECT_FOLDER --nologo --no-restore --logger "console;verbosity=detailed"
