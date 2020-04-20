@@ -3,7 +3,7 @@ name: Build Releases
 env:
   PROJECT_FOLDER: "./KF2 Workshop URL Converter/KF2 Workshop URL Converter.sln"
   FRAMEWORK: "netcoreapp3.1"
-  PUBLISH_ARGS: "--nologo --self-contained true -v q /p:PublishSingleFile=true /p:PublishTrimmed=true /p:UseAppHost=true"
+  PUBLISH_ARGS: "-c Release --nologo -v q /p:PublishSingleFile=true /p:PublishTrimmed=true /p:UseAppHost=true"
 
 on:
   push:
