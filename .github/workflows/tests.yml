@@ -9,6 +9,7 @@ on:
       - "!**.*"
       - "!Images/"
       - "KF2 Workshop URL Converter/**"
+      - ".github/workflows/**"
 
 jobs:
   test:
@@ -19,7 +20,7 @@ jobs:
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v1
         with:
-            dotnet-version: 3.1
+            dotnet-version: 3.1.3
       - name: Install Dependencies
         run: dotnet restore $PROJECT_FOLDER
       - name: Test
