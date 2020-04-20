@@ -47,7 +47,7 @@ namespace KF2WorkshopUrlConverter.Test.Services
         [Description("Trys to fetch the Example Collection from SteamWorkshop and expects: 1 item, correct name & correct url from an item.")]
         public void SucceedToFetchTheProjectExampleCollection()
         {
-            var testUrl = "https://steamcommunity.com/sharedfiles/filedetails/?id=882417829";
+            var testUrl = "https://steamcommunity.com/sharedfiles/filedetails/?id=882417820";
             var collection = workshopService.FetchCollectionFromURL(testUrl);
             Assert.IsTrue(collection.ItemCount == 1);
             Assert.IsTrue(collection.Name.Equals("Map Collection Example"));
