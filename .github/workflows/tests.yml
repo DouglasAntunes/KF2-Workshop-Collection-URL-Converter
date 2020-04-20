@@ -22,6 +22,6 @@ jobs:
         with:
             dotnet-version: 3.1.201
       - name: Install Dependencies
-        run: dotnet restore $PROJECT_FOLDER
+        run: dotnet restore ${{env.PROJECT_FOLDER}}
       - name: Test
-        run: dotnet test $PROJECT_FOLDER --nologo --no-restore --logger "console;verbosity=detailed"
+        run: dotnet test ${{env.PROJECT_FOLDER}} --nologo --no-restore --logger "console;verbosity=detailed"
