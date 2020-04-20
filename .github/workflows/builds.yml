@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      
+
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v1
         with:
@@ -28,19 +28,22 @@ jobs:
         run: dotnet publish "${{ env.PROJECT_FOLDER }}" -f ${{ env.FRAMEWORK }} -r win-x64 -o ./win64 ${{ env.PUBLISH_ARGS }}
       
       - name: Zip Windows Build
-        run: zip -j -9 KF2WorkshopUrlConverter.${{ github.ref }}-win64.zip ./win64/*
+        #run: zip -j -9 KF2WorkshopUrlConverter.${{ github.ref }}-win64.zip ./win64/*
+        run: zip -j -9 KF2WorkshopUrlConverter.$(${GITHUB_REF#refs/heads/} | sed 's/\//_/g')-win64.zip ./win64/*      # Only for workflow test
       
       - name: Linux Build
         run: dotnet publish "${{ env.PROJECT_FOLDER }}" -f "${{ env.FRAMEWORK }}" -r linux-x64 -o ./linux64 ${{ env.PUBLISH_ARGS }}
         
       - name: Zip Linux Build
-        run: zip -j -9 KF2WorkshopUrlConverter.${{ github.ref }}-linux64.zip ./linux64/*
+        #run: zip -j -9 KF2WorkshopUrlConverter.${{ github.ref }}-linux64.zip ./linux64/*
+        run: zip -j -9 KF2WorkshopUrlConverter.$(${GITHUB_REF#refs/heads/} | sed 's/\//_/g')-linux64.zip ./linux64/*  # Only for workflow test
       
       - name: macOS Build
         run: dotnet publish "${{ env.PROJECT_FOLDER }}" -f "${{ env.FRAMEWORK }}" -r osx-x64 -o ./macos64 ${{ env.PUBLISH_ARGS }}
         
       - name: Zip macOS Build
-        run: zip -j -9 KF2WorkshopUrlConverter.${{ github.ref }}-macos64.zip ./macos64/*
+        #run: zip -j -9 KF2WorkshopUrlConverter.${{ github.ref }}-macos64.zip ./macos64/*
+        run: zip -j -9 KF2WorkshopUrlConverter.$(${GITHUB_REF#refs/heads/} | sed 's/\//_/g')-macos64.zip ./macos64/*  # Only for workflow test
 
       - name: Create Release
         id: create_release
@@ -60,8 +63,10 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./KF2WorkshopUrlConverter.${{ github.ref }}-win64.zip
-          asset_name: KF2WorkshopUrlConverter.${{ github.ref }}-win64.zip
+          #asset_path: ./KF2WorkshopUrlConverter.${{ github.ref }}-win64.zip
+          asset_path: ./KF2WorkshopUrlConverter.$(${GITHUB_REF#refs/heads/} | sed 's/\//_/g')-win64.zip               # Only for workflow test
+          #asset_name: KF2WorkshopUrlConverter.${{ github.ref }}-win64.zip
+          asset_name: KF2WorkshopUrlConverter.$(${GITHUB_REF#refs/heads/} | sed 's/\//_/g')-win64.zip                 # Only for workflow test
           asset_content_type: application/zip
 
       - name: Upload Linux Release Asset
@@ -71,8 +76,10 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./KF2WorkshopUrlConverter.${{ github.ref }}-linux64.zip
-          asset_name: KF2WorkshopUrlConverter.${{ github.ref }}-linux64.zip
+          #asset_path: ./KF2WorkshopUrlConverter.${{ github.ref }}-linux64.zip
+          asset_path: ./KF2WorkshopUrlConverter.$(${GITHUB_REF#refs/heads/} | sed 's/\//_/g')-linux64.zip             # Only for workflow test
+          #asset_name: KF2WorkshopUrlConverter.${{ github.ref }}-linux64.zip
+          asset_name: KF2WorkshopUrlConverter.$(${GITHUB_REF#refs/heads/} | sed 's/\//_/g')-linux64.zip               # Only for workflow test
           asset_content_type: application/zip
 
       - name: Upload macOS Release Asset
@@ -82,6 +89,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./KF2WorkshopUrlConverter.${{ github.ref }}-macos64.zip
-          asset_name: KF2WorkshopUrlConverter.${{ github.ref }}-macos64.zip
+          #asset_path: ./KF2WorkshopUrlConverter.${{ github.ref }}-macos64.zip
+          asset_path: ./KF2WorkshopUrlConverter.$(${GITHUB_REF#refs/heads/} | sed 's/\//_/g')-macos64.zip             # Only for workflow test
+          #asset_name: KF2WorkshopUrlConverter.${{ github.ref }}-macos64.zip
+          asset_name: KF2WorkshopUrlConverter.$(${GITHUB_REF#refs/heads/} | sed 's/\//_/g')-macos64.zip               # Only for workflow test
           asset_content_type: application/zip
