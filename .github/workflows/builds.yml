@@ -1,0 +1,100 @@
+name: Build Releases
+
+env:
+  PROJECT_FOLDER: "./KF2 Workshop URL Converter/KF2WorkshopUrlConverter.Core/KF2WorkshopUrlConverter.Core.csproj"
+  FRAMEWORK: "netcoreapp3.1"
+  PUBLISH_ARGS: "-c Release --nologo -p:PublishSingleFile=true -p:PublishTrimmed=true -p:UseAppHost=true -v q"
+
+on:
+  push:
+    #branches:               # Only for workflow test
+    #  - feature/github_ci   # Only for workflow test
+    tags:
+      - "v*" # Push events to matching v*, i.e. v1.0, v20.15.10
+
+jobs:
+  build_releases:
+    name: Build Releases
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      #- name: Extract branch name                                                                            # Only for workflow test
+      #  shell: bash                                                                                          # Only for workflow test
+      #  run: echo "::set-env name=BRANCH_NAME::$(echo ${GITHUB_REF#refs/heads/} | sed 's/\//_/g')"           # Only for workflow test
+
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+            dotnet-version: 3.1.201
+      
+      - name: Windows Build
+        run: dotnet publish "${{ env.PROJECT_FOLDER }}" -f ${{ env.FRAMEWORK }} -r win-x64 -o ./win64 ${{ env.PUBLISH_ARGS }}
+      
+      - name: Zip Windows Build
+        run: zip -j -9 KF2WorkshopUrlConverter.${{ github.ref }}-win64.zip ./win64/*
+        #run: zip -j -9 KF2WorkshopUrlConverter.${{ env.BRANCH_NAME }}-win64.zip ./win64/*                    # Only for workflow test
+      
+      - name: Linux Build
+        run: dotnet publish "${{ env.PROJECT_FOLDER }}" -f "${{ env.FRAMEWORK }}" -r linux-x64 -o ./linux64 ${{ env.PUBLISH_ARGS }}
+        
+      - name: Zip Linux Build
+        run: zip -j -9 KF2WorkshopUrlConverter.${{ github.ref }}-linux64.zip ./linux64/*
+        #run: zip -j -9 KF2WorkshopUrlConverter.${{ env.BRANCH_NAME }}-linux64.zip ./linux64/*                # Only for workflow test
+      
+      - name: macOS Build
+        run: dotnet publish "${{ env.PROJECT_FOLDER }}" -f "${{ env.FRAMEWORK }}" -r osx-x64 -o ./macos64 ${{ env.PUBLISH_ARGS }}
+        
+      - name: Zip macOS Build
+        run: zip -j -9 KF2WorkshopUrlConverter.${{ github.ref }}-macos64.zip ./macos64/*
+        #run: zip -j -9 KF2WorkshopUrlConverter.${{ env.BRANCH_NAME }}-macos64.zip ./macos64/*                # Only for workflow test
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: KF2 Workshop Collection URL Converter ${{ github.ref }}
+          draft: true
+          prerelease: false
+
+      - name: Upload Windows Release Asset
+        id: upload-win-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./KF2WorkshopUrlConverter.${{ github.ref }}-win64.zip
+          #asset_path: ./KF2WorkshopUrlConverter.${{ env.BRANCH_NAME }}-win64.zip                             # Only for workflow test
+          asset_name: KF2WorkshopUrlConverter.${{ github.ref }}-win64.zip
+          #asset_name: KF2WorkshopUrlConverter.${{ env.BRANCH_NAME }}-win64.zip                               # Only for workflow test
+          asset_content_type: application/zip
+
+      - name: Upload Linux Release Asset
+        id: upload-linux-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./KF2WorkshopUrlConverter.${{ github.ref }}-linux64.zip
+          #asset_path: ./KF2WorkshopUrlConverter.${{ env.BRANCH_NAME }}-linux64.zip                           # Only for workflow test
+          asset_name: KF2WorkshopUrlConverter.${{ github.ref }}-linux64.zip
+          #asset_name: KF2WorkshopUrlConverter.${{ env.BRANCH_NAME }}-linux64.zip                             # Only for workflow test
+          asset_content_type: application/zip
+
+      - name: Upload macOS Release Asset
+        id: upload-macos-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./KF2WorkshopUrlConverter.${{ github.ref }}-macos64.zip
+          #asset_path: ./KF2WorkshopUrlConverter.${{ env.BRANCH_NAME }}-macos64.zip                           # Only for workflow test
+          asset_name: KF2WorkshopUrlConverter.${{ github.ref }}-macos64.zip
+          #asset_name: KF2WorkshopUrlConverter.${{ env.BRANCH_NAME }}-macos64.zip                             # Only for workflow test
+          asset_content_type: application/zip

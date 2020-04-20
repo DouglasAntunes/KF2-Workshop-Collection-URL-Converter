@@ -1,0 +1,26 @@
+name: Tests
+
+env:
+  PROJECT_FOLDER: "./KF2 Workshop URL Converter/KF2 Workshop URL Converter.sln"
+
+on:
+  pull_request:
+    paths:
+      - "!**" # Excluding all files & paths.
+      - "KF2 Workshop URL Converter/**" # Adding only the project path to run tests.
+      #- ".github/workflows/tests.yml"   #To Test updates on this workflow file.
+
+jobs:
+  test:
+    name: Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+            dotnet-version: 3.1.201
+      - name: Install Dependencies
+        run: dotnet restore "${{ env.PROJECT_FOLDER }}"
+      - name: Test
+        run: dotnet test "${{ env.PROJECT_FOLDER }}" --nologo --no-restore --logger "console;verbosity=detailed"
