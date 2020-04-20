@@ -25,19 +25,19 @@ jobs:
             dotnet-version: 3.1.201
       
       - name: Windows Build
-        run: dotnet publish "${{ env.PROJECT_FOLDER }}" -f "${{ env.FRAMEWORK }}" -r "win-x64" -o ./win64 ${{ env.PUBLISH_ARGS }}
+        run: dotnet publish "${{ env.PROJECT_FOLDER }}" -f "${{ env.FRAMEWORK }}" -r win-x64 -o ./win64 ${{ env.PUBLISH_ARGS }}
       
       - name: Zip Windows Build
         run: zip -j -9 KF2WorkshopUrlConverter.${{ github.ref }}-win64.zip ./win64/
       
       - name: Linux Build
-        run: dotnet publish "${{ env.PROJECT_FOLDER }}" -f "${{ env.FRAMEWORK }}" -r "linux-x64" -o ./linux64 ${{ env.PUBLISH_ARGS }}
+        run: dotnet publish "${{ env.PROJECT_FOLDER }}" -f "${{ env.FRAMEWORK }}" -r linux-x64 -o ./linux64 ${{ env.PUBLISH_ARGS }}
         
       - name: Zip Linux Build
         run: zip -j -9 KF2WorkshopUrlConverter.${{ github.ref }}-linux64.zip ./linux64/
       
       - name: macOS Build
-        run: dotnet publish "${{ env.PROJECT_FOLDER }}" -f "${{ env.FRAMEWORK }}" -r "osx-x64" -o ./macos64 ${{ env.PUBLISH_ARGS }}
+        run: dotnet publish "${{ env.PROJECT_FOLDER }}" -f "${{ env.FRAMEWORK }}" -r osx-x64 -o ./macos64 ${{ env.PUBLISH_ARGS }}
         
       - name: Zip macOS Build
         run: zip -j -9 KF2WorkshopUrlConverter.${{ github.ref }}-macos64.zip ./macos64/
