@@ -51,7 +51,7 @@ jobs:
           draft: true
           prerelease: false
 
-      -name: Upload Windows Release Asset
+      - name: Upload Windows Release Asset
         id: upload-win-asset
         uses: actions/upload-release-asset@v1
         env:
@@ -62,7 +62,7 @@ jobs:
           asset_name: KF2WorkshopUrlConverter.${{ github.ref }}-win64.zip
           asset_content_type: application/zip
 
-      -name: Upload Linux Release Asset
+      - name: Upload Linux Release Asset
         id: upload-linux-asset
         uses: actions/upload-release-asset@v1
         env:
@@ -73,7 +73,7 @@ jobs:
           asset_name: KF2WorkshopUrlConverter.${{ github.ref }}-linux64.zip
           asset_content_type: application/zip
 
-      -name: Upload macOS Release Asset
+      - name: Upload macOS Release Asset
         id: upload-linux-asset
         uses: actions/upload-release-asset@v1
         env:
