@@ -1,0 +1,85 @@
+name: Build Releases
+
+env:
+  PROJECT_FOLDER: "./KF2 Workshop URL Converter/KF2 Workshop URL Converter.sln"
+  FRAMEWORK: "netcoreapp3.1"
+  PUBLISH_ARGS: "--nologo --no-restore --self-contained true -v q /p:PublishSingleFile=true /p:PublishTrimmed=true"
+
+on:
+  push:
+    branches:
+      - master
+      - feature/github_ci # temporary to test this script.
+    tags:
+      - "v*" # Push events to matching v*, i.e. v1.0, v20.15.10
+
+jobs:
+  build_releases:
+    name: Build Releases
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+            dotnet-version: 3.1.201
+      
+      - name: Install Dependencies
+        run: dotnet restore "${{ env.PROJECT_FOLDER }}"
+      
+      - name: Windows Build
+        run: dotnet publish "${{ env.PROJECT_FOLDER }}" -f "${{ env.FRAMEWORK }}" -r "win-x64" -o ./win64 ${{ env.PUBLISH_ARGS }}
+        run: zip -j -9 KF2WorkshopUrlConverter.${{ github.ref }}-win64.zip ./win64/
+      
+      - name: Linux Build
+        run: dotnet publish "${{ env.PROJECT_FOLDER }}" -f "${{ env.FRAMEWORK }}" -r "linux-x64" -o ./linux64 ${{ env.PUBLISH_ARGS }}
+        run: zip -j -9 KF2WorkshopUrlConverter.${{ github.ref }}-linux64.zip ./linux64/
+      
+      - name: macOS Build
+        run: dotnet publish "${{ env.PROJECT_FOLDER }}" -f "${{ env.FRAMEWORK }}" -r "osx-x64" -o ./macos64 ${{ env.PUBLISH_ARGS }}
+        run: zip -j -9 KF2WorkshopUrlConverter.${{ github.ref }}-macos64.zip ./macos64/
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: true
+          prerelease: false
+
+      -name: Upload Windows Release Asset
+        id: upload-win-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./KF2WorkshopUrlConverter.${{ github.ref }}-win64.zip
+          asset_name: KF2WorkshopUrlConverter.${{ github.ref }}-win64.zip
+          asset_content_type: application/zip
+
+      -name: Upload Linux Release Asset
+        id: upload-linux-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./KF2WorkshopUrlConverter.${{ github.ref }}-linux64.zip
+          asset_name: KF2WorkshopUrlConverter.${{ github.ref }}-linux64.zip
+          asset_content_type: application/zip
+
+      -name: Upload macOS Release Asset
+        id: upload-linux-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./KF2WorkshopUrlConverter.${{ github.ref }}-macos64.zip
+          asset_name: KF2WorkshopUrlConverter.${{ github.ref }}-macos64.zip
+          asset_content_type: application/zip
