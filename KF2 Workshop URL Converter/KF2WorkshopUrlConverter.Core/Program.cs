@@ -14,7 +14,7 @@ namespace KF2WorkshopUrlConverter.Core
 {
     class Program
     {
-        private const string appVersion = "1.1.1";
+        private const string appVersion = "1.1";
         private static string dllFileName;
 
         static void Main(string[] args)
