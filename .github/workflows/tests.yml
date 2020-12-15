@@ -2,7 +2,7 @@ name: Tests
 
 env:
   PROJECT_FOLDER: "./KF2 Workshop URL Converter/"
-  SOLUTION_PATH: "${{ env.PROJECT_FOLDER }}KF2 Workshop URL Converter.sln"
+  SOLUTION_PATH: "${{ PROJECT_FOLDER }}KF2 Workshop URL Converter.sln"
 
 on:
   pull_request:
