@@ -1,5 +1,8 @@
 # KF2 Workshop Collection URL Converter
 
+![Tests](https://github.com/DouglasAntunes/KF2-Workshop-Collection-URL-Converter/workflows/Tests/badge.svg)
+[![Coverage Status](https://coveralls.io/repos/github/DouglasAntunes/KF2-Workshop-Collection-URL-Converter/badge.svg?branch=master)](https://coveralls.io/github/DouglasAntunes/KF2-Workshop-Collection-URL-Converter?branch=master)
+
 KF2 Workshop Collection URL Converter is a tool to help server owners to keep updated custom content(maps, items) on a server using Steam Workshop Collections. (Like [this](https://steamcommunity.com/sharedfiles/filedetails/?id=882417829 "Example Collection") Example Collection)
 
 The use of Steam Workshop Collection facilitate users to download all content before joining the server.
