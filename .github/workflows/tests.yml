@@ -25,7 +25,7 @@ jobs:
         run: dotnet restore "${{ env.SOLUTION_PATH }}"
       - name: Run Tests with Coverage
         run: dotnet test "${{ env.SOLUTION_PATH }}" --nologo --no-restore --logger "console;verbosity=detailed" 
-                --collect:"XPlat Code Coverage" --settings:"${{ env.PROJECT_FOLDER }}/KF2WorkshopUrlConverter.Test/test.runsettings"
+                --collect:"XPlat Code Coverage" --settings:"${{ env.PROJECT_PATH }}/KF2WorkshopUrlConverter.Test/test.runsettings"
       - name: Get Coverage File Path
         shell: bash
         run: "::set-env name=COVERAGE_PATH::$(ls {{ env.PROJECT_PATH }}/KF2WorkshopUrlConverter.Test/TestResults/$(ls {{ env.PROJECT_PATH }}/KF2WorkshopUrlConverter.Test/TestResults/)/coverage.info)"
