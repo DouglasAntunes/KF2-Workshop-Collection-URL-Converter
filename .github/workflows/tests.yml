@@ -5,6 +5,9 @@ env:
   SOLUTION_PATH: "./KF2 Workshop URL Converter/KF2 Workshop URL Converter.sln"
 
 on:
+  push:
+    branches:
+      - master
   pull_request:
     paths:
       - "!**" # Excluding all files & paths.
