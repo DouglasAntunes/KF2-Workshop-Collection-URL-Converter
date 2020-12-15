@@ -1,8 +1,8 @@
 name: Tests
 
 env:
-  PROJECT_FOLDER: "./KF2 Workshop URL Converter/"
-  SOLUTION_PATH: "${{ PROJECT_FOLDER }}KF2 Workshop URL Converter.sln"
+  PROJECT_PATH:  "./KF2 Workshop URL Converter/"
+  SOLUTION_PATH: "./KF2 Workshop URL Converter/KF2 Workshop URL Converter.sln"
 
 on:
   pull_request:
@@ -28,10 +28,9 @@ jobs:
                 --collect:"XPlat Code Coverage" --settings:"${{ env.PROJECT_FOLDER }}/KF2WorkshopUrlConverter.Test/test.runsettings"
       - name: Get Coverage File Path
         shell: bash
-        run: "::set-env name=COVERAGE_PATH::$(ls {{ env.PROJECT_FOLDER }}/KF2WorkshopUrlConverter.Test/TestResults/$(ls {{ env.PROJECT_FOLDER }}/KF2WorkshopUrlConverter.Test/TestResults/)/coverage.info)"
+        run: "::set-env name=COVERAGE_PATH::$(ls {{ env.PROJECT_PATH }}/KF2WorkshopUrlConverter.Test/TestResults/$(ls {{ env.PROJECT_PATH }}/KF2WorkshopUrlConverter.Test/TestResults/)/coverage.info)"
       - name: Coveralls
         uses: coverallsapp/github-action@master
         with:
             github-token: ${{ secrets.GITHUB_TOKEN }}
-            base-path: ${{ env.PROJECT_FOLDER }}
             path-to-lcov: ${{ env.COVERAGE_PATH }}
