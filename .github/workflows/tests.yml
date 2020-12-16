@@ -8,6 +8,10 @@ on:
   push:
     branches:
       - master
+    paths:
+      - "!**" # Excluding all files & paths.
+      - "KF2 Workshop URL Converter/**" # Adding only the project path to run tests.
+      - ".github/workflows/tests.yml"   #To Test updates on this workflow file.
   pull_request:
     paths:
       - "!**" # Excluding all files & paths.
