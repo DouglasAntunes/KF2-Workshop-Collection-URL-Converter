@@ -147,7 +147,7 @@ namespace KF2WorkshopUrlConverter.Test
                 "### Map Collection Example ###",
                 $"### Coll URL: {validUrl} ###",
                 "### 1 Items \\| Last Query: [0-9]{1,2}\\/[0-9]{1,2}\\/[0-9]{4} [0-9]{1,2}:[0-9]{2}:[0-9]{1,2} ###",
-                "",
+                string.Empty,
                 "ServerSubscribedWorkshopItems=650252240 # DooM 2: Map 1 Entryway",
                 "## END of Map Collection Example ##"
             };
@@ -171,6 +171,60 @@ namespace KF2WorkshopUrlConverter.Test
                 Assert.AreEqual(expectedFileResult[5], fileResultArr[5]);
             }
 
+            File.Delete(fileName);
+        }
+
+        [Test, 
+         Description("Start the program with a valid Steam collection url and a random file output. Runs 2 Times on the same file output. Expects a message that has save the file and the correct 2x file contents. with a space between.")]
+        public void ValidUrlAndOutArgDataAppend([Values("--url=", "-url=")] string urlCommand, [Values("--o=", "-o=")] string outputCommand)
+        {
+            string validUrl = "https://steamcommunity.com/sharedfiles/filedetails/?id=882417829";
+            string fileName = $"{TestContext.CurrentContext.Random.GetString()}.txt";
+            string[] args = new string[] { urlCommand + validUrl, outputCommand + fileName };
+            
+            string[] expectedFileResult = {
+                "### Map Collection Example ###",
+                $"### Coll URL: {validUrl} ###",
+                "### 1 Items \\| Last Query: [0-9]{1,2}\\/[0-9]{1,2}\\/[0-9]{4} [0-9]{1,2}:[0-9]{2}:[0-9]{1,2} ###",
+                string.Empty,
+                "ServerSubscribedWorkshopItems=650252240 # DooM 2: Map 1 Entryway",
+                "## END of Map Collection Example ##"
+            };
+            string expectedConsoleResult = $"Success! File Saved to \"{fileName}\"" + Environment.NewLine + Environment.NewLine;
+
+            // Execute 2 times
+            for (int i = 0; i < 2; i++)
+            {
+                using (StringWriter sw = new StringWriter())
+                {
+                    Console.SetOut(sw);
+
+                    Program.Main(args);
+                    Assert.AreEqual(expectedConsoleResult, sw.ToString());
+
+                    using (FileStream fs = new FileStream(fileName, FileMode.Open))
+                    {
+                        using StreamReader sr = new StreamReader(fs);
+
+                        string fileResult = sr.ReadToEnd();
+                        string[] fileResultArr = fileResult.Split(Environment.NewLine);
+
+                        Assert.That(fileResultArr.Length, Is.EqualTo(8 * (i+1) + (i*-1)));
+                        Assert.AreEqual(expectedFileResult[0], fileResultArr[(i * 7) + 0]);
+                        Assert.AreEqual(expectedFileResult[1], fileResultArr[(i * 7) + 1]);
+                        Assert.That(fileResultArr[(i * 7) + 2], Does.Match(expectedFileResult[2]));
+                        Assert.AreEqual(expectedFileResult[3], fileResultArr[(i * 7) + 3]);
+                        Assert.AreEqual(expectedFileResult[4], fileResultArr[(i * 7) + 4]);
+                        Assert.AreEqual(expectedFileResult[5], fileResultArr[(i * 7) + 5]);
+
+                        // Check if exists a new line space between.
+                        if(i == 1)
+                        {
+                            Assert.AreEqual(fileResultArr[6], string.Empty);
+                        }
+                    }
+                }
+            }
             File.Delete(fileName);
         }
     }
