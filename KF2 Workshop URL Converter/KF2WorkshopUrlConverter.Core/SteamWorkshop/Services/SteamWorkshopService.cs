@@ -48,6 +48,10 @@ namespace KF2WorkshopUrlConverter.Core.SteamWorkshop.Services
 
         public static bool IsASteamWorkshopCollection(string url)
         {
+            if (!url.Contains("steamcommunity.com/sharedfiles/filedetails/?id="))
+            {
+                return false;
+            }
             HtmlWeb web = new HtmlWeb();
             HtmlDocument pageDoc;
             try
@@ -58,8 +62,7 @@ namespace KF2WorkshopUrlConverter.Core.SteamWorkshop.Services
             {
                 throw new UriFormatException("Must contain http:// or https:// on the URL.", e);
             }
-            HtmlNodeCollection nodes = pageDoc.DocumentNode.SelectNodes("//div[@class='collectionItemDetails']");
-            return nodes != null;
+            return IsASteamWorkshopCollection(pageDoc);
         }
 
         public static bool IsASteamWorkshopCollection(HtmlDocument document)
