@@ -14,10 +14,10 @@ namespace KF2WorkshopUrlConverter.Core
 {
     class Program
     {
-        private const string appVersion = "1.1";
-        private static string dllFileName;
+        public const string appVersion = "1.1";
+        public static string dllFileName;
 
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
             #region List and catch arguments
             bool help = false;
@@ -44,7 +44,7 @@ namespace KF2WorkshopUrlConverter.Core
             }
             catch (Exception e)
             {
-                ShowError(e);
+                ShowError(e.Message);
                 return;
             }
 
@@ -100,7 +100,7 @@ namespace KF2WorkshopUrlConverter.Core
                             file.WriteLine(collectionList);
                         }
                     }
-                    Console.WriteLine($"Success! File Saved to \"{path}\"\n");
+                    Console.WriteLine($"Success! File Saved to \"{path}\"" + Environment.NewLine);
                 }
             }
             catch (Exception e)
@@ -127,13 +127,6 @@ namespace KF2WorkshopUrlConverter.Core
             Console.WriteLine();
             Console.WriteLine("Options:");
             p.WriteOptionDescriptions(Console.Out);
-        }
-
-        private static void ShowError(Exception e)
-        {
-            Console.Write($"KF2 Workshop Collection URL Converter v{appVersion}: ");
-            Console.WriteLine(e.Message);
-            Console.WriteLine($"Try `dotnet {dllFileName} --help' for more information.");
         }
 
         private static void ShowError(string error)

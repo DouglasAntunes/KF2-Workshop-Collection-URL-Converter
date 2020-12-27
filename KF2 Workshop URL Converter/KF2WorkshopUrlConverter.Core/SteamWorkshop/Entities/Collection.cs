@@ -10,7 +10,7 @@ namespace KF2WorkshopUrlConverter.Core.SteamWorkshop.Entities
 
         public string Url { get => $"https://steamcommunity.com/sharedfiles/filedetails/?id={Id}"; }
 
-        public int ItemCount { get => Items.Count; }
+        public int ItemCount { get => Items != null ? Items.Count : 0; }
 
         public Collection(string id, string name, List<Item> items)
         {
