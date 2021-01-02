@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
     <PackageProjectUrl>https://github.com/DouglasAntunes/KF2-Workshop-Collection-URL-Converter</PackageProjectUrl>
     <RepositoryUrl>https://github.com/DouglasAntunes/KF2-Workshop-Collection-URL-Converter</RepositoryUrl>
     <PackageLicenseUrl>https://github.com/DouglasAntunes/KF2-Workshop-Collection-URL-Converter/blob/master/LICENSE</PackageLicenseUrl>
