@@ -27,7 +27,7 @@ jobs:
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v1
         with:
-            dotnet-version: 3.1.201
+            dotnet-version: 5.0.101
       - name: Install Dependencies
         run: dotnet restore "${{ env.SOLUTION_PATH }}"
       - name: Run Tests with Coverage

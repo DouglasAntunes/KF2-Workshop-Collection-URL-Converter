@@ -2,8 +2,8 @@ name: Build Releases
 
 env:
   PROJECT_FOLDER: "./KF2 Workshop URL Converter/KF2WorkshopUrlConverter.Core/KF2WorkshopUrlConverter.Core.csproj"
-  FRAMEWORK: "netcoreapp3.1"
-  PUBLISH_ARGS: "-c Release --nologo -p:PublishSingleFile=true -p:PublishTrimmed=true -p:UseAppHost=true -v q"
+  FRAMEWORK: "net5.0"
+  PUBLISH_ARGS: "-c Release -p:PublishSingleFile=true -p:PublishTrimmed=true -p:IncludeAllContentForSelfExtract=true -v q"
 
 on:
   push:
@@ -17,6 +17,8 @@ jobs:
   build_releases:
     name: Build Releases
     runs-on: ubuntu-latest
+    env:
+      DOTNET_NOLOGO: true
     steps:
       - uses: actions/checkout@v2
 
@@ -33,7 +35,7 @@ jobs:
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v1
         with:
-            dotnet-version: 3.1.201
+            dotnet-version: 5.0.101
       
       - name: Windows Build
         run: dotnet publish "${{ env.PROJECT_FOLDER }}" -f ${{ env.FRAMEWORK }} -r win-x64 -o ./win64 ${{ env.PUBLISH_ARGS }}
