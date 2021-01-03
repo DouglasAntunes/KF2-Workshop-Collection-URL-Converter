@@ -9,6 +9,15 @@ namespace KF2WorkshopUrlConverter.Test
     [TestFixture]
     class ProgramTest
     {
+#pragma warning disable IDE0052 // Remover membros particulares não lidos
+        private static readonly string[] ArgsPrefix = { "--", "-", "/" };
+        private static readonly string[] ArgsSeparator = { "=" }; // Not included " " because is unreliable on automated tests for some reason.
+        private static readonly string[] HelpArgs = { "help", "h" };
+        private static readonly string[] UrlArgs = { "url", "u" };
+        private static readonly string[] VersionArgs = { "version", "v" };
+        private static readonly string[] OutputArgs = { "output", "o" };
+#pragma warning restore IDE0052 // Remover membros particulares não lidos
+
         [TearDown, Description("Restores the default Output & Error Output")]
         public void Teardown()
         {
@@ -16,19 +25,24 @@ namespace KF2WorkshopUrlConverter.Test
             Console.SetError(new StreamWriter(Console.OpenStandardError()));
         }
 
-        private string DefaultErrorMessage(string appVersion, string dllName, string message)
+        private static string DefaultErrorMessage(string appVersion, string dllName, string message)
         {
             StringBuilder sb = new StringBuilder();
+            sb.AppendLine();
             sb.Append($"KF2 Workshop Collection URL Converter v{appVersion}: ");
             sb.AppendLine(message);
-            sb.AppendLine($"Try `dotnet {dllName} --help' for more information.");
+            sb.AppendLine($"Use: '{dllName} --help' for more information.");
+            sb.AppendLine(Environment.NewLine);
             return sb.ToString();
         }
 
-        private string DefaultOptionsMessage(string dllName)
+        private static string DefaultOptionsMessage(string dllName)
         {
             StringBuilder sb = new StringBuilder();
-            sb.AppendLine($"Usage: dotnet {dllName} [OPTIONS]");
+            sb.AppendLine();
+            sb.AppendLine($"Usage: {dllName} [OPTIONS]");
+            sb.AppendLine();
+            sb.AppendLine("About:");
             sb.AppendLine("Converts the URL of a Steam Workshop Collection to the format that the file \"PCServer-KFEngine.ini\" accepts.");
             sb.AppendLine($"Requires URL on format like https://steamcommunity.com/sharedfiles/filedetails/?id=XXXXXXXXX... (http:// is accepted as well).");
             sb.AppendLine("## For more info or updates, go to https://github.com/DouglasAntunes/KF2-Workshop-Collection-URL-Converter");
@@ -38,6 +52,7 @@ namespace KF2WorkshopUrlConverter.Test
             sb.AppendLine("  -o, --output=VALUE         Path of a text file to export. (optional)");
             sb.AppendLine("  -v, --version              Version info.");
             sb.AppendLine("  -h, --help                 Show this message and exit.");
+            sb.AppendLine(Environment.NewLine);
             return sb.ToString();
         }
 
@@ -47,19 +62,19 @@ namespace KF2WorkshopUrlConverter.Test
             using StringWriter sw = new StringWriter();
             Console.SetOut(sw);
             
-            Program.Main(new string[] { });
+            Program.Main(Array.Empty<string>());
 
             string expectedResult = DefaultErrorMessage(Program.appVersion, Program.dllFileName, "Missing required option u|url=");
             Assert.AreEqual(expectedResult, sw.ToString());
         }
 
         [Test, Description("Trys to Start with the help argument. Expects the help text with all options.")]
-        public void OnlyHelpArg([Values("--help", "--h", "-help", "-h")] string command)
+        public void OnlyHelpArg([ValueSource("ArgsPrefix")] string argPrefix, [ValueSource("HelpArgs")] string command)
         {
             using StringWriter sw = new StringWriter();
             Console.SetOut(sw);
 
-            Program.Main(new string[] { command });
+            Program.Main(new string[] { argPrefix + command });
 
             string expectedResult = DefaultOptionsMessage(Program.dllFileName);
 
@@ -67,57 +82,60 @@ namespace KF2WorkshopUrlConverter.Test
         }
 
         [Test, Description("Trys to Start with the version argument. Expects to show the version and command to show more help.")]
-        public void OnlyVersionArg([Values("--version", "--v", "-version", "-v")] string command)
+        public void OnlyVersionArg([ValueSource("ArgsPrefix")] string argPrefix, [ValueSource("VersionArgs")] string command)
         {
             using StringWriter sw = new StringWriter();
             Console.SetOut(sw);
 
-            Program.Main(new string[] { command });
+            Program.Main(new string[] { argPrefix + command });
 
-            string expectedResult = $"KF2 Workshop Collection URL Converter v{Program.appVersion}" + Environment.NewLine +
+            string expectedResult = Environment.NewLine + 
+                                    $"KF2 Workshop Collection URL Converter v{Program.appVersion}" + Environment.NewLine +
                                      "Project Page: https://github.com/DouglasAntunes/KF2-Workshop-Collection-URL-Converter" + Environment.NewLine +
-                                    $"Try `dotnet {Program.dllFileName} --help' for more information." + Environment.NewLine;
+                                    $"Use: '{Program.dllFileName} --help' for more information." + Environment.NewLine +
+                                    Environment.NewLine + Environment.NewLine;
             Assert.AreEqual(expectedResult, sw.ToString());
         }
 
         [Test, Description("Trys to Start with the url command but with null string. Expects message with missing value.")]
-        public void MissingURLArgData([Values("--url", "-url")] string command)
+        public void MissingURLArgData([ValueSource("ArgsPrefix")] string argPrefix, [ValueSource("UrlArgs")] string command)
         {
             using StringWriter sw = new StringWriter();
             Console.SetOut(sw);
 
-            Program.Main(new string[] { command });
+            Program.Main(new string[] { argPrefix + command });
 
-            string expectedResult = DefaultErrorMessage(Program.appVersion, Program.dllFileName, $"Missing required value for option '{command}'.");
+            string expectedResult = DefaultErrorMessage(Program.appVersion, Program.dllFileName, $"Missing required value for option '{argPrefix + command}'.");
             Assert.AreEqual(expectedResult, sw.ToString());
         }
 
         [Test, Description("Start the program with a invalid Steam collection url. Expects error message that is not a Steam workshop url.")]
-        public void InvalidURLArgData([Values("--url=", "-url=")] string command, [Values("", "google.com")] string url)
+        public void InvalidURLArgData([ValueSource("ArgsPrefix")] string argPrefix, [ValueSource("UrlArgs")] string command, 
+                                      [ValueSource("ArgsSeparator")] string argSeparator, [Values("google.com")] string url)
         {
             using StringWriter sw = new StringWriter();
             Console.SetOut(sw);
 
-            Program.Main(new string[] { command + url });
+            Program.Main(new string[] { argPrefix + command + argSeparator + url });
 
             string expectedResult = DefaultErrorMessage(Program.appVersion, Program.dllFileName, "Not a Steam Workshop URL");
             Assert.AreEqual(expectedResult, sw.ToString());
         }
 
         [Test, Description("Start the program with a valid Steam collection url. Expects output of the example collection.")]
-        public void ValidURLArgData([Values("--url=", "-url=")] string command)
+        public void ValidURLArgData([ValueSource("ArgsPrefix")] string argPrefix, [ValueSource("UrlArgs")] string command, [ValueSource("ArgsSeparator")] string argSeparator)
         {
             string validUrl = "https://steamcommunity.com/sharedfiles/filedetails/?id=882417829";
             using StringWriter sw = new StringWriter();
             Console.SetOut(sw);
 
-            Program.Main(new string[] { command + validUrl });
+            Program.Main(new string[] { argPrefix + command + argSeparator + validUrl });
 
             string[] expectedResult = {
                 "### Map Collection Example ###",
                 $"### Coll URL: {validUrl} ###",
                 "### 1 Items \\| Last Query: [0-9]{1,2}\\/[0-9]{1,2}\\/[0-9]{4} [0-9]{1,2}:[0-9]{2}:[0-9]{1,2} ###",
-                "",
+                string.Empty,
                 "ServerSubscribedWorkshopItems=650252240 # DooM 2: Map 1 Entryway",
                 "## END of Map Collection Example ##"
             };
@@ -134,14 +152,18 @@ namespace KF2WorkshopUrlConverter.Test
         }
 
         [Test, Description("Start the program with a valid Steam collection url and a random file output. Expects a message that has save the file and the correct file contents.")]
-        public void ValidURLAndOutArgData([Values("--url=", "-url=")] string urlCommand, [Values("--o=", "-o=")] string outputCommand)
+        public void ValidURLAndOutArgData([ValueSource("ArgsPrefix")] string argPrefix, [ValueSource("UrlArgs")] string urlCommand,
+                                          [ValueSource("ArgsSeparator")] string argSeparator, [ValueSource("OutputArgs")] string outputCommand)
         {
             string validUrl = "https://steamcommunity.com/sharedfiles/filedetails/?id=882417829";
             string fileName = $"{TestContext.CurrentContext.Random.GetString()}.txt";
             using StringWriter sw = new StringWriter();
             Console.SetOut(sw);
 
-            Program.Main(new string[] { urlCommand + validUrl, outputCommand + fileName });
+            Program.Main(new string[] { 
+                argPrefix + urlCommand + argSeparator + validUrl,
+                argPrefix + outputCommand + argSeparator + fileName,
+            });
 
             string[] expectedFileResult = {
                 "### Map Collection Example ###",
@@ -176,11 +198,15 @@ namespace KF2WorkshopUrlConverter.Test
 
         [Test, 
          Description("Start the program with a valid Steam collection url and a random file output. Runs 2 Times on the same file output. Expects a message that has save the file and the correct 2x file contents. with a space between.")]
-        public void ValidUrlAndOutArgDataAppend([Values("--url=", "-url=")] string urlCommand, [Values("--o=", "-o=")] string outputCommand)
+        public void ValidUrlAndOutArgDataAppend([ValueSource("ArgsPrefix")] string argPrefix, [ValueSource("UrlArgs")] string urlCommand,
+                                                [ValueSource("ArgsSeparator")] string argSeparator, [ValueSource("OutputArgs")] string outputCommand)
         {
             string validUrl = "https://steamcommunity.com/sharedfiles/filedetails/?id=882417829";
             string fileName = $"{TestContext.CurrentContext.Random.GetString()}.txt";
-            string[] args = new string[] { urlCommand + validUrl, outputCommand + fileName };
+            string[] args = new string[] {
+                argPrefix + urlCommand + argSeparator + validUrl,
+                argPrefix + outputCommand + argSeparator + fileName,
+            };
             
             string[] expectedFileResult = {
                 "### Map Collection Example ###",
