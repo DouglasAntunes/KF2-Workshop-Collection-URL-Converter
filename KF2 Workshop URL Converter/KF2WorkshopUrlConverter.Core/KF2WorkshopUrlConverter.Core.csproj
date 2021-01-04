@@ -27,7 +27,7 @@ he use of Steam Workshop Collection facilitate users to download all content bef
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="HtmlAgilityPack" Version="1.11.28" />
+    <PackageReference Include="HtmlAgilityPack" Version="1.11.29" />
     <PackageReference Include="Mono.Options.Core" Version="1.0.0" />
   </ItemGroup>
   
