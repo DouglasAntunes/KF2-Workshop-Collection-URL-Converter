@@ -9,6 +9,12 @@
     <AssemblyName>KF2WorkshopUrlConverter</AssemblyName>
     <Version>1.1.0</Version>
     <StartupObject>KF2WorkshopUrlConverter.Core.Program</StartupObject>
+    <Authors>DouglasAntunes &lt;https://github.com/DouglasAntunes&gt;</Authors>
+    <Company>DouglasAntunes &lt;https://github.com/DouglasAntunes&gt;</Company>
+    <Description>KF2 Workshop Collection URL Converter is a tool to help server owners to keep updated custom content(maps, items) on a server using Steam Workshop Collections.
+he use of Steam Workshop Collection facilitate users to download all content before joining the server.</Description>
+    <NeutralLanguage>en-US</NeutralLanguage>
+    <RepositoryType>Git</RepositoryType>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -17,7 +23,7 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <Optimize>true</Optimize>
+    <Optimize>false</Optimize>
   </PropertyGroup>
 
   <ItemGroup>
