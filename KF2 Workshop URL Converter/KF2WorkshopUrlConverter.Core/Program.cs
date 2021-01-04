@@ -16,7 +16,7 @@ namespace KF2WorkshopUrlConverter.Core
 {
     class Program
     {
-        public const string appVersion = "1.1";
+        public static string appVersion;
         public static string dllFileName;
 
         public static void Main(string[] args)
@@ -26,6 +26,7 @@ namespace KF2WorkshopUrlConverter.Core
             bool version = false;
             string url = null;
             string path = null;
+            appVersion = Assembly.GetEntryAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion;
             dllFileName = Path.GetFileNameWithoutExtension(Assembly.GetEntryAssembly().Location);
             List<string> extra;
 
