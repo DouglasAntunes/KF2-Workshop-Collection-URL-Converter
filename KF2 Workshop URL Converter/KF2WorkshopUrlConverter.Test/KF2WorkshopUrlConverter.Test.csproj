@@ -4,6 +4,18 @@
     <TargetFramework>net5.0</TargetFramework>
 
     <IsPackable>false</IsPackable>
+
+    <Authors>DouglasAntunes &lt;https://github.com/DouglasAntunes&gt;</Authors>
+
+    <Description>Tests for KF2WorkshopUrlConverter project</Description>
+
+    <PackageProjectUrl>https://github.com/DouglasAntunes/KF2-Workshop-Collection-URL-Converter</PackageProjectUrl>
+
+    <RepositoryUrl>https://github.com/DouglasAntunes/KF2-Workshop-Collection-URL-Converter</RepositoryUrl>
+
+    <RepositoryType>Git</RepositoryType>
+
+    <NeutralLanguage>en-US</NeutralLanguage>
   </PropertyGroup>
 
   <ItemGroup>

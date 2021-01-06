@@ -7,14 +7,16 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using System.Text;
+
+using static KF2WorkshopUrlConverter.Core.Properties.ProgramStrings;
+using static System.String;
 
 [assembly: InternalsVisibleTo("KF2WorkshopUrlConverter.Test")]
 namespace KF2WorkshopUrlConverter.Core
 {
     class Program
     {
-        public const string appVersion = "1.1";
+        public static string appVersion;
         public static string dllFileName;
 
         public static void Main(string[] args)
@@ -24,17 +26,18 @@ namespace KF2WorkshopUrlConverter.Core
             bool version = false;
             string url = null;
             string path = null;
+            appVersion = Assembly.GetEntryAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion;
             dllFileName = Path.GetFileNameWithoutExtension(Assembly.GetEntryAssembly().Location);
             List<string> extra;
 
             OptionSet options = new OptionSet() {
-                { "u|url=", "The Url of the Workshop Collection. (required)",
+                { "u|url=", ArgumentDescriptionURL,
                     v => url = v },
-                { "o|output=", "Path of a text file to export. (optional)",
+                { "o|output=", ArgumentDescriptionOutput,
                     v => path = v },
-                { "v|version", "Version info.",
+                { "v|version", ArgumentDescriptionVersion,
                     v => version = v != null },
-                { "h|help",  "Show this message and exit.",
+                { "h|help",  ArgumentDescriptionHelp,
                     v => help = v != null }
             };
 
@@ -62,7 +65,7 @@ namespace KF2WorkshopUrlConverter.Core
 
             if (url == null)
             {
-                ShowError("Missing required option u|url=");
+                ShowError(ErrorMissingUrlArgumentValue);
                 return;
             }
             #endregion
@@ -73,17 +76,10 @@ namespace KF2WorkshopUrlConverter.Core
                 SteamWorkshopService workshopService = new SteamWorkshopService();
                 Collection collection = workshopService.FetchCollectionFromURL(url);
 
-                //List Format
-                StringBuilder header = new StringBuilder()
-                    .AppendLine($"### {collection.Name} ###")
-                    .AppendLine($"### Coll URL: {url} ###")
-                    .AppendLine($"### {collection.ItemCount} Items | Last Query: {DateTime.Now} ###");
-                string footer = $"## END of {collection.Name} ##";
-
                 string collectionList = new WorkshopCollectionListBuilder()
-                    .WithHeader(header.ToString())
+                    .WithHeader(Format(HeaderFormat, collection.Name, url, collection.ItemCount, DateTime.Now))
                     .WithCollection(collection)
-                    .WithFooter(footer)
+                    .WithFooter(Format(FooterFormat, collection.Name))
                     .WithFormat("ServerSubscribedWorkshopItems={0} # {1}")
                 .Build();
 
@@ -100,7 +96,7 @@ namespace KF2WorkshopUrlConverter.Core
                             file.WriteLine(collectionList);
                         }
                     }
-                    Console.WriteLine($"Success! File Saved to \"{path}\"" + Environment.NewLine);
+                    Console.WriteLine(ResponseSuccessFileSaved, path);
                 }
             }
             catch (Exception e)
@@ -111,37 +107,15 @@ namespace KF2WorkshopUrlConverter.Core
             #endregion
         }
 
-        private static void ShowVersion()
-        {
-            Console.WriteLine();
-            Console.WriteLine($"KF2 Workshop Collection URL Converter v{appVersion}");
-            Console.WriteLine("Project Page: https://github.com/DouglasAntunes/KF2-Workshop-Collection-URL-Converter");
-            Console.WriteLine($"Use: '{dllFileName} --help' for more information.");
-            Console.WriteLine(Environment.NewLine);
-        }
+        private static void ShowVersion() => Console.WriteLine(ResponseShowVersion, AppName, appVersion, AppGitHubURL, dllFileName);
 
         private static void ShowHelp(OptionSet p)
         {
-            Console.WriteLine();
-            Console.WriteLine($"Usage: {dllFileName} [OPTIONS]");
-            Console.WriteLine();
-            Console.WriteLine("About:");
-            Console.WriteLine("Converts the URL of a Steam Workshop Collection to the format that the file \"PCServer-KFEngine.ini\" accepts.");
-            Console.WriteLine("Requires URL on format like https://steamcommunity.com/sharedfiles/filedetails/?id=XXXXXXXXX... (http:// is accepted as well).");
-            Console.WriteLine("## For more info or updates, go to https://github.com/DouglasAntunes/KF2-Workshop-Collection-URL-Converter");
-            Console.WriteLine();
-            Console.WriteLine("Options:");
+            Console.WriteLine(ResponseShowHelp, dllFileName, AppGitHubURL);
             p.WriteOptionDescriptions(Console.Out);
-            Console.WriteLine(Environment.NewLine);
+            Console.WriteLine();
         }
 
-        private static void ShowError(string error)
-        {
-            Console.WriteLine();
-            Console.Write($"KF2 Workshop Collection URL Converter v{appVersion}: ");
-            Console.WriteLine(error);
-            Console.WriteLine($"Use: '{dllFileName} --help' for more information.");
-            Console.WriteLine(Environment.NewLine);
-        }
+        private static void ShowError(string error) => Console.WriteLine(ResponseShowError, AppName, appVersion, error, dllFileName);
     }
 }

@@ -9,6 +9,12 @@
     <AssemblyName>KF2WorkshopUrlConverter</AssemblyName>
     <Version>1.1.0</Version>
     <StartupObject>KF2WorkshopUrlConverter.Core.Program</StartupObject>
+    <Authors>DouglasAntunes &lt;https://github.com/DouglasAntunes&gt;</Authors>
+    <Company>DouglasAntunes &lt;https://github.com/DouglasAntunes&gt;</Company>
+    <Description>KF2 Workshop Collection URL Converter is a tool to help server owners to keep updated custom content(maps, items) on a server using Steam Workshop Collections.
+he use of Steam Workshop Collection facilitate users to download all content before joining the server.</Description>
+    <NeutralLanguage>en-US</NeutralLanguage>
+    <RepositoryType>Git</RepositoryType>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -17,16 +23,31 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <Optimize>true</Optimize>
+    <Optimize>false</Optimize>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="HtmlAgilityPack" Version="1.11.28" />
+    <PackageReference Include="HtmlAgilityPack" Version="1.11.29" />
     <PackageReference Include="Mono.Options.Core" Version="1.0.0" />
   </ItemGroup>
   
   <ItemGroup>
     <RuntimeHostConfigurationOption Include="System.Globalization.Invariant" Value="true" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Compile Update="Properties\ProgramStrings.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ProgramStrings.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\ProgramStrings.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ProgramStrings.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
 
   <ProjectExtensions><VisualStudio><UserProperties /></VisualStudio></ProjectExtensions>
