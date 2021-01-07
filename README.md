@@ -17,41 +17,22 @@ Go to [Releases Page](https://github.com/DouglasAntunes/KF2-Workshop-Collection-
 
 ## How to Use
 
-### Windows
+1. Download the last version of [KF2 Workshop Collection URL Converter](https://github.com/DouglasAntunes/KF2-Workshop-Collection-URL-Converter/releases "Releases Page") for your respective OS.
 
-1. Download the last version of [KF2 Workshop Collection URL Converter](https://github.com/DouglasAntunes/KF2-Workshop-Collection-URL-Converter/releases "Releases Page") for win64.
+2. Extract the zip on a folder.
 
-2. Extract the files on a folder.
+3. Open PowerShell, Command Prompt or Terminal on the folder.
 
-3. Open PowerShell or Command Prompt on the folder.
+- **[On Linux / MacOS]** Type ```chmod +x KF2WorkshopUrlConverter``` to grant execution rights.
 
-4. Type ```KF2WorkshopUrlConverter -u http://steamcommunity.com/sharedfiles/filedetails/?id=882417829``` changing the url link with the desired collection (http or https).
+4. Type ```KF2WorkshopUrlConverter --url http://steamcommunity.com/sharedfiles/filedetails/?id=882417829``` changing the url link with the desired collection (http or https).
 
 5. See the results.
 
 - You can export this list do a file using the ```-o path\to\file``` parameter.
-Example: ```KF2WorkshopUrlConverter -u http://steamcommunity.com/sharedfiles/filedetails/?id=882417829 -o maps.txt```
+Example: ```KF2WorkshopUrlConverter --url http://steamcommunity.com/sharedfiles/filedetails/?id=882417829 --output maps.txt```
 
-- For more help, type ```KF2WorkshopUrlConverter -help```
-
-### Linux / MacOS
-
-1. Download the last version of [KF2 Workshop Collection URL Converter](https://github.com/DouglasAntunes/KF2-Workshop-Collection-URL-Converter/releases "Releases Page") for your respective OS.
-
-2. Extract the files on a folder.
-
-3. Open Terminal on the folder.
-
-4. Type ```chmod +x ./KF2WorkshopUrlConverter``` to grant execution rights.
-
-5. Type ```./KF2WorkshopUrlConverter -u http://steamcommunity.com/sharedfiles/filedetails/?id=882417829``` changing the url link with the desired collection (http or https).
-
-6. See the results.
-
-- You can export this list do a file using the ```-o path\to\file``` parameter.
-Example: ```./KF2WorkshopUrlConverter -u http://steamcommunity.com/sharedfiles/filedetails/?id=882417829 -o maps.txt```
-
-- For more help, type ```./KF2WorkshopUrlConverter -help```
+- For more help, type ```KF2WorkshopUrlConverter --help```
 
 ## How to Create a Collection
 
