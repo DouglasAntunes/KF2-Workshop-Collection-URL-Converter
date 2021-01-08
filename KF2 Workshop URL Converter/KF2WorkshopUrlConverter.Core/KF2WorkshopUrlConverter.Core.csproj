@@ -7,7 +7,7 @@
     <RepositoryUrl>https://github.com/DouglasAntunes/KF2-Workshop-Collection-URL-Converter</RepositoryUrl>
     <PackageLicenseUrl>https://github.com/DouglasAntunes/KF2-Workshop-Collection-URL-Converter/blob/master/LICENSE</PackageLicenseUrl>
     <AssemblyName>KF2WorkshopUrlConverter</AssemblyName>
-    <Version>1.1.0</Version>
+    <Version>1.2.0</Version>
     <StartupObject>KF2WorkshopUrlConverter.Core.Program</StartupObject>
     <Authors>DouglasAntunes &lt;https://github.com/DouglasAntunes&gt;</Authors>
     <Company>DouglasAntunes &lt;https://github.com/DouglasAntunes&gt;</Company>

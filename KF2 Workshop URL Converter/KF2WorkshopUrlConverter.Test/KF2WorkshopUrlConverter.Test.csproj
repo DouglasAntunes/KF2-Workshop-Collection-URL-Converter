@@ -16,6 +16,8 @@
     <RepositoryType>Git</RepositoryType>
 
     <NeutralLanguage>en-US</NeutralLanguage>
+
+    <Version>1.2.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
